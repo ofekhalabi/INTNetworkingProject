@@ -27,7 +27,7 @@ DHCP IP allocation sys-logs
 
 
 Public to private num of hops
--------------------
+------------------
 30
 traceroute reaches its maximum jumps of 30 and then throws the packet. The packet does not reach the private vm because it is blocked in the security group.
 
