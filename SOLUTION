@@ -1,26 +1,40 @@
 Local DNS Server IP
 -------------------
-<ip-here>
+10.0.0.2
 
 
 
 Default gateway IP
 -------------------
-<ip-here>
+10.0.0.1
 
 
 
 DHCP IP allocation sys-logs
 -------------------
-<logs-here>
+2024-08-02T13:38:33.259307+00:00 ip-10-0-0-222 dhcpcd[451]: dhcpcd-10.0.6 starting
+2024-08-02T13:38:33.259312+00:00 ip-10-0-0-222 dhcpcd[454]: DUID 00:01:00:01:2e:3f:9d:d2:06:41:06:42:e7:71
+2024-08-02T13:38:33.259320+00:00 ip-10-0-0-222 dhcpcd[454]: ens5: IAID 06:42:e7:71
+2024-08-02T13:38:33.259324+00:00 ip-10-0-0-222 dhcpcd[454]: ens5: soliciting a DHCP lease
+2024-08-02T13:38:33.259329+00:00 ip-10-0-0-222 dhcpcd[454]: ens5: offered 10.0.0.222 from 10.0.0.1
+2024-08-02T13:38:33.259333+00:00 ip-10-0-0-222 dhcpcd[454]: ens5: leased 10.0.0.222 for 3600 seconds
+2024-08-02T13:38:33.259337+00:00 ip-10-0-0-222 dhcpcd[454]: ens5: adding route to 10.0.0.0/24
+2024-08-02T13:38:33.259342+00:00 ip-10-0-0-222 dhcpcd[454]: ens5: adding default route via 10.0.0.1
+2024-08-02T13:38:33.259349+00:00 ip-10-0-0-222 dhcpcd[454]: control command: /usr/sbin/dhcpcd --dumplease --ipv4only ens5
+2024-08-02T13:38:33.264327+00:00 ip-10-0-0-222 systemd-networkd[523]: ens5: DHCPv4 address 10.0.0.222/24, gateway 10.0.0.1 acquired from 10.0.0.1
+
 
 
 
 Public to private num of hops
 -------------------
-<answer-here>
+30
+traceroute reaches its maximum jumps of 30 and then throws the packet. The packet does not reach the private vm because it is blocked in the security group.
+
 
 
 DNS queries from the private instance
 -------------------
-<answer-here>
+DNS can be resolved to public IP addresses inside the private VM.
+Because the local dns on the machine addresses the dns server that Amazon provides.
+Amazon provides a DNS server (the Amazon Route 53 Resolver) for your VPC.
