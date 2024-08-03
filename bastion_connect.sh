@@ -3,6 +3,9 @@
 BASTION_IP=$1
 PRIVATE_IP=$2
 COMMAND_PRIVATE=$3
+
+KEY_PATH_2=/home/ubuntu/private_key_git
+
 # Function to check if an IP address is reachable
 check_ip() {
 	local ip=$1
@@ -25,8 +28,9 @@ else
 		check_ip "$BASTION_IP"                   # Validate the IP address before attempting to SSH
 		ssh -i "${KEY_PATH}" ubuntu@$BASTION_IP        # Connect to the remote server using SSH
 	elif [[ "$#" -eq 2 || "$#" -eq 3 ]]; then
-		ssh-add -q ${KEY_PATH}
-		ssh -J ubuntu@${BASTION_IP} ubuntu@${PRIVATE_IP} "${COMMAND_PRIVATE}"
+		#ssh-add -q ${KEY_PATH}
+		#ssh -J ubuntu@${BASTION_IP} ubuntu@${PRIVATE_IP} "${COMMAND_PRIVATE}"
+		ssh -t -i "${KEY_PATH}" ubuntu@"${BASTION_IP}" "ssh -i ${KEY_PATH_2} ubuntu@${PRIVATE_IP} ${COMMAND_PRIVATE}"
 
 	else
 		echo "Please enter one , two or three parameters."
