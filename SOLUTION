@@ -37,4 +37,4 @@ DNS queries from the private instance
 -------------------
 DNS can be resolved to public IP addresses inside the private VM.
 Because the local dns on the machine addresses the dns server that Amazon provides.
-Amazon provides a DNS server (the Amazon Route 53 Resolver) for your VPC.
+Amazon provides a DNS server (the Amazon Route 53 Resolver) for your VPC
