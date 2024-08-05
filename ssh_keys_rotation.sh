@@ -31,7 +31,7 @@ if [[ $# -eq 1 ]]; then
 	#APPEND THE NEW KEYS TO authorized_keys FILE
 	ssh -i "${OLD_KEY}" ubuntu@"${PRIVATE_IP}" "cat id_rsa.pub >> .ssh/authorized_keys"
 
-	#CHCEK IF CAN I CONNECT TO THE MESHIN WITH THE NEW KEY
+	#CHCEK IF CAN I CONNECT TO THE MESHIN WITH THE NEW KEY.
 	ssh -i "${NEW_KEY}" ubuntu@"${PRIVATE_IP}" "cat id_rsa.pub > .ssh/authorized_keys"
 	if [[ $? -eq 0 ]]; then
 		echo "Now you can connect to the private machine only with this key: ${NEW_KEY}"
