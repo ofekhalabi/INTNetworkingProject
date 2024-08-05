@@ -3,34 +3,39 @@
 
 # Paths
 PRIVATE_IP=$1
-KEY_DIR="/home/ubuntu"
-OLD_KEY="${KEY_DIR}/old_key"
-NEW_KEY="${KEY_DIR}/key_change"
+KEY_DIR="/home/ubuntu/.ssh"
+OLD_KEY="/home/ubuntu/old_key"
+NEW_KEY="${KEY_DIR}/id_rsa"
 NEW_KEY_PUB="${NEW_KEY}.pub"
 
 if [[ $# -eq 1 ]]; then
-	if [[ -f "${KEY_DIR}/key_change" ]]; then
-		cd /home/ubuntu/
+	if [[ -f "${KEY_DIR}/id_rsa" ]]; then
+		cd /home/ubuntu/.ssh/
 		if [[ -f "${OLD_KEY}" ]]; then
+			cd /home/ubuntu
 			rm -f old_key
 		fi
-		mv "${KEY_DIR}/key_change" "${OLD_KEY}" #CHANGE THE NAME TO THE OLD KEY
-		rm  -f "${KEY_DIR}/key_change.pub"
+		mv "${KEY_DIR}/id_rsa" "${OLD_KEY}" #CHANGE THE NAME TO THE OLD KEY
+		rm  -f "${KEY_DIR}/id_rsa.pub"
 	fi
 
+	cd /home/ubuntu
 	#GENERATE SSH_KEY ON THE PUBLIC INSTANCE
 	ssh-keygen -t rsa -b 4096 -f /home/ubuntu/key_change -P "" -q
+	mv key_change "${NEW_KEY}"
+	mv key_change.pub "${NEW_KEY_PUB}"
 
 	#FORWARD PUBLIC KEY TO PRIVATE INSTANCE
-	scp -i  /home/ubuntu/old_key /home/ubuntu/key_change.pub ubuntu@"${PRIVATE_IP=}":/home/ubuntu
+	scp -i  "${OLD_KEY}" "${NEW_KEY_PUB}" ubuntu@"${PRIVATE_IP}":/home/ubuntu
 
 	#APPEND THE NEW KEYS TO authorized_keys FILE
-	ssh -i /home/ubuntu/old_key ubuntu@"${PRIVATE_IP}" "cat key_change.pub >> .ssh/authorized_keys"
+	ssh -i "${OLD_KEY}" ubuntu@"${PRIVATE_IP}" "cat id_rsa.pub >> .ssh/authorized_keys"
 
 	#CHCEK IF CAN I CONNECT TO THE MESHIN WITH THE NEW KEY
-	ssh -i /home/ubuntu/key_change ubuntu@"${PRIVATE_IP}" "cat key_change.pub > .ssh/authorized_keys"
+	ssh -i "${NEW_KEY}" ubuntu@"${PRIVATE_IP}" "cat id_rsa.pub > .ssh/authorized_keys"
 	if [[ $? -eq 0 ]]; then
 		echo "Now you can connect to the private machine only with this key: ${NEW_KEY}"
+		cd /home/ubuntu/
 		rm old_key
 	else
 		echo "The key you created is not good"

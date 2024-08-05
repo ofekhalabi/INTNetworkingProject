@@ -4,7 +4,7 @@ BASTION_IP=$1
 PRIVATE_IP=$2
 COMMAND_PRIVATE=$3
 
-KEY_PATH_2=/home/ubuntu/key_change
+KEY_PATH_2=/home/ubuntu/.ssh/id_rsa
 
 # Function to check if an IP address is reachable
 check_ip() {
