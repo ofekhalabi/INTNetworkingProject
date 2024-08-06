@@ -28,7 +28,7 @@ if [[ $# -eq 1 ]]; then
 	#FORWARD PUBLIC KEY TO PRIVATE INSTANCE
 	scp -i  "${OLD_KEY}" "${NEW_KEY_PUB}" ubuntu@"${PRIVATE_IP}":/home/ubuntu
 
-	#APPEND THE NEW KEYS TO authorized_keys FILE
+	#APPEND THE NEW KEYS TO authorized_keys FILE.
 	ssh -i "${OLD_KEY}" ubuntu@"${PRIVATE_IP}" "cat id_rsa.pub >> .ssh/authorized_keys"
 
 	#CHCEK IF CAN I CONNECT TO THE MESHIN WITH THE NEW KEY.
