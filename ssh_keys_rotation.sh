@@ -35,8 +35,8 @@ if [[ $# -eq 1 ]]; then
 	ssh -i "${NEW_KEY}" ubuntu@"${PRIVATE_IP}" "cat id_rsa.pub > .ssh/authorized_keys"
 	if [[ $? -eq 0 ]]; then
 		echo "Now you can connect to the private machine only with this key: ${NEW_KEY}"
-		cd /home/ubuntu/
-		rm old_key
+		rm /home/ubuntu/old_key
+		rm /home/ubuntu/.ssh/id_rsa.pub
 		ssh -i "${NEW_KEY}" ubuntu@"${PRIVATE_IP}" "rm /home/ubuntu/id_rsa.pub"
 	else
 		echo "The key you created is not good"
