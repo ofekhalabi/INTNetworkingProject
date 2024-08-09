@@ -19,10 +19,10 @@ check_ip() {
 
 # Check if the environment variable `KEY_PATH` is set
 if [[ -z "${KEY_PATH}" ]]; then
-	#echo "The environment variable 'KEY_PATH' does not exist."
+	echo "The environment variable 'KEY_PATH' does not exist."
 	exit 5
 else
-	echo "The environment variable 'KEY_PATH' exists."
+	#echo "The environment variable 'KEY_PATH' exists."
 	# Check the number of arguments if the num = 1 is connect the Public instance , if the num = 2 is connect to Private instance, if the num = 3 is to command on Private instance. 
 	if [[ "$#" -eq 1 ]]; then
 		check_ip "$BASTION_IP"                   # Validate the IP address before attempting to SSH
