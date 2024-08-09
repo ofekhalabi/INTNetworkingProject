@@ -19,7 +19,7 @@ check_ip() {
 
 # Check if the environment variable `KEY_PATH` is set
 if [[ -z "${KEY_PATH}" ]]; then
-	echo "The environment variable 'KEY_PATH' does not exist."
+	#echo "The environment variable 'KEY_PATH' does not exist."
 	exit 5
 else
 	echo "The environment variable 'KEY_PATH' exists."
