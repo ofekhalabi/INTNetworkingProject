@@ -33,7 +33,7 @@ server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in fi
 echo "${server_cert}" > "${PATH_TLS}/cert.pem"
 
 #check if the certificate is valid
-openssl verify -CAfile ${PATH_TLS}/cert-ca-aws.pem ${PATH_TLS}/cert.pem > /dev/null
+openssl verify -CAfile ${PATH_TLS}/cert-ca-aws.pem ${PATH_TLS}/cert.pem
 if [[ $? -eq 0 ]]; then
 	echo 'Cert.pem: OK'
 else
@@ -71,6 +71,7 @@ if [[ $? -eq 0 ]]; then
 else
 	echo "Server symmetric encryption using the exchanged master-key has failed."
 	exit 6
+fi
 
 # Print the decrypted message
 echo "Decrypted message: ${DECRYPTED_MESSAGE}"
