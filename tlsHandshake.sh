@@ -22,7 +22,7 @@ if [[ $? -eq 0 ]]; then
 	echo "The CLIENT HELLO message is successful"
 else
 	echo "The CLIENT HELLO message is unsuccessful, PlEASE TRY AGAIN"
-	exit 1
+	exit 6
 fi
 
 # Extract sessionID and serverCert
