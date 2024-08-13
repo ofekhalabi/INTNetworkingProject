@@ -42,7 +42,7 @@ else
 fi
 
 
-# Generate a master key
+# Generate a master key.
 openssl rand -base64 32 > "${PATH_TLS}/master_key"
 
 #encrypt the server certificate with the master key.
