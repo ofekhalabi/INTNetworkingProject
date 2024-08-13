@@ -24,7 +24,7 @@ else
 	echo "The CLIENT HELLO message is unsuccessful, PlEASE TRY AGAIN"
 	exit 1
 fi
-
+sleep 3
 # Extract sessionID and serverCert
 sid=$(echo "${response_client_hello}" | jq -r '.sessionID') #Take the sessionID.
 server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in file the Server certificate.
@@ -77,4 +77,4 @@ fi
 echo "Decrypted message: ${DECRYPTED_MESSAGE}"
 
 # Clean up
-rm -f "${PATH_TLS}/encrypted_message.bin" "${PATH_TLS}/master_key"
+rm -f "${PATH_TLS}/encrypted_message.bin" "${PATH_TLS}/master_key" "${PATH_TLS}/cert.pem"
