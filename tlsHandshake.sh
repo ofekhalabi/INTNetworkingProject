@@ -33,12 +33,12 @@ server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in fi
 echo "${server_cert}" > "${PATH_TLS}/cert.pem"
 
 #check if the certificate is valid
-openssl verify -CAfile ${PATH_TLS}/cert-ca-aws.pem ${PATH_TLS}/cert.pem
+openssl verify -CAfile ${PATH_TLS}/cert-ca-aws.pem ${PATH_TLS}/cert.pem  > /dev/null
 if [[ $? -eq 0 ]]; then
 	echo 'Cert.pem: OK'
 else
 	echo "Server Certificate is invalid."
-	exit 6
+	exit 5
 fi
 
 
