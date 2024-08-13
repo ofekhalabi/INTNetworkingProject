@@ -16,7 +16,6 @@ response_client_hello=$(curl -s -X POST http://"${PUBLIC_IP}":8080/clienthello \
 	],
 	"message":"Client Hello"
 }')
-
 #check if curl  succeeded
 if [[ $? -eq 0 ]]; then
 	echo "The CLIENT HELLO message is successful"
@@ -24,7 +23,6 @@ else
 	echo "The CLIENT HELLO message is unsuccessful, PlEASE TRY AGAIN"
 	exit 1
 fi
-sleep 3
 # Extract sessionID and serverCert
 sid=$(echo "${response_client_hello}" | jq -r '.sessionID') #Take the sessionID.
 server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in file the Server certificate.
@@ -33,7 +31,8 @@ server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in fi
 echo "${server_cert}" > "${PATH_TLS}/cert.pem"
 
 #check if the certificate is valid
-openssl verify -CAfile ${PATH_TLS}/cert-ca-aws.pem ${PATH_TLS}/cert.pem  > /dev/null
+openssl verify -CAfile /home/ofekh/PycharmProjects/INTNetworkingProject/cert-ca-aws.pem /home/ofekh/PycharmProjects/INTNetworkingProject/cert.pem 
+
 if [[ $? -eq 0 ]]; then
 	echo 'Cert.pem: OK'
 else
@@ -77,4 +76,4 @@ fi
 echo "Decrypted message: ${DECRYPTED_MESSAGE}"
 
 # Clean up
-rm -f "${PATH_TLS}/encrypted_message.bin" "${PATH_TLS}/master_key" "${PATH_TLS}/cert.pem"
+rm -f "${PATH_TLS}/encrypted_message.bin" "${PATH_TLS}/master_key" 
