@@ -22,7 +22,7 @@ if [[ $? -eq 0 ]]; then
 	echo "The CLIENT HELLO message is successful"
 else
 	echo "The CLIENT HELLO message is unsuccessful, PlEASE TRY AGAIN"
-	exit 6
+	exit 1
 fi
 
 # Extract sessionID and serverCert
@@ -55,6 +55,13 @@ response_keyexchange=$(curl -s -X POST http://"${PUBLIC_IP}":8080/keyexchange \
                         "sampleMessage": "Hi server, please encrypt me and send to client!"
                 }')
 
+if [[ $? -eq 0 ]]; then
+        echo "Client-Server TLS handshake has been completed successfully"
+else
+        echo "Server symmetric encryption using the exchanged master-key has failed."
+        exit 6
+fi
+
 # Extract the encrypted sample message
 SAMPLE_MESSAGE=$(echo "${response_keyexchange}" | jq -r '.encryptedSampleMessage')
 
@@ -63,13 +70,6 @@ echo "${SAMPLE_MESSAGE}" | base64 -d > "${PATH_TLS}/encrypted_message.bin"
 
 # Decrypt the message
 DECRYPTED_MESSAGE=$(openssl enc -d -aes-256-cbc -pbkdf2 -kfile "${PATH_TLS}/master_key" -in "${PATH_TLS}/encrypted_message.bin")
-
-if [[ $? -eq 0 ]]; then 
-	echo "Client-Server TLS handshake has been completed successfully"
-else
-	echo "Server symmetric encryption using the exchanged master-key has failed."
-	exit 6
-fi
 
 # Print the decrypted message
 echo "Decrypted message: ${DECRYPTED_MESSAGE}"
