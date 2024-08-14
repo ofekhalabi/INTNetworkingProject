@@ -29,10 +29,14 @@ server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in fi
 
 #Save the server certificate
 echo "${server_cert}" > "${PATH_TLS}/cert.pem"
-
+AWS_CERT=$(wget https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/networking_project/cert-ca-aws.pem)
+echo AWS_CERT > "${PATH_TLS}/cert-ca-aws.pem"
+if [ ! -f cert-ca-aws.pem ]; then
+echo "Failed to download CA certificate."
+exit 1
+fi
 #check if the certificate is valid
-openssl verify -CAfile /home/ofekh/PycharmProjects/INTNetworkingProject/cert-ca-aws.pem /home/ofekh/PycharmProjects/INTNetworkingProject/cert.pem 
-
+openssl verify -CAfile "${PATH_TLS}/cert-ca-aws.pem" "${PATH_TLS}/cert.pem" > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
 	echo 'Cert.pem: OK'
 else
