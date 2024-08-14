@@ -1,6 +1,5 @@
 #!/bin/bash
 PUBLIC_IP=$1
-PATH_TLS=/home/ofekh/PycharmProjects/INTNetworkingProject
 if [[ $# -ne 1 ]]; then
 	echo "Please Enter The PUBLIC IP"
 	exit 1
@@ -28,7 +27,7 @@ sid=$(echo "${response_client_hello}" | jq -r '.sessionID') #Take the sessionID.
 server_cert=$(echo "${response_client_hello}" | jq -r '.serverCert') #Save in file the Server certificate.
 
 #Save the server certificate
-echo "${server_cert}" > "${PATH_TLS}/cert.pem"
+echo "${server_cert}" > cert.pem
 if [  -f cert-ca-aws.pem ]; then
   rm cert-ca-aws.pem
 fi
@@ -37,6 +36,7 @@ if [ ! -f cert-ca-aws.pem ]; then
 echo "Failed to download CA certificate."
 exit 1
 fi
+
 #check if the certificate is valid
 openssl verify -CAfile cert-ca-aws.pem cert.pem > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
@@ -48,10 +48,10 @@ fi
 
 
 # Generate a master key.
-openssl rand -base64 32 > "${PATH_TLS}/master_key"
+openssl rand -base64 32 > master_key
 
 #encrypt the server certificate with the master key.
-ENCRYPTED_MASTER_KEY=$(openssl smime -encrypt -aes-256-cbc -in "${PATH_TLS}/master_key"  -outform DER "${PATH_TLS}/cert.pem" | base64 -w 0)
+ENCRYPTED_MASTER_KEY=$(openssl smime -encrypt -aes-256-cbc -in master_key  -outform DER cert.pem | base64 -w 0)
 response_keyexchange=$(curl -s -X POST http://"${PUBLIC_IP}":8080/keyexchange \
                 -H "Content-Type: application/json" \
                 -d '{
@@ -65,10 +65,10 @@ response_keyexchange=$(curl -s -X POST http://"${PUBLIC_IP}":8080/keyexchange \
 SAMPLE_MESSAGE=$(echo "${response_keyexchange}" | jq -r '.encryptedSampleMessage')
 
 # Decode and save the encrypted message
-echo "${SAMPLE_MESSAGE}" | base64 -d > "${PATH_TLS}/encrypted_message.bin"
+echo "${SAMPLE_MESSAGE}" | base64 -d > encrypted_message.bin
 
 # Decrypt the message
-DECRYPTED_MESSAGE=$(openssl enc -d -aes-256-cbc -pbkdf2 -kfile "${PATH_TLS}/master_key" -in "${PATH_TLS}/encrypted_message.bin")
+DECRYPTED_MESSAGE=$(openssl enc -d -aes-256-cbc -pbkdf2 -kfile master_key -in encrypted_message.bin)
 
 #check if decryption succeeded
 if [[ $? -eq 0 ]]; then
@@ -82,4 +82,4 @@ fi
 echo "Decrypted message: ${DECRYPTED_MESSAGE}"
 
 # Clean up
-rm -f "${PATH_TLS}/encrypted_message.bin" "${PATH_TLS}/master_key" "${PATH_TLS}/cert-ca-aws.pem"
+rm -f encrypted_message.bin master_key cert-ca-aws.pem
