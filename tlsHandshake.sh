@@ -71,11 +71,12 @@ echo "${SAMPLE_MESSAGE}" | base64 -d > encrypted_message.bin
 DECRYPTED_MESSAGE=$(openssl enc -d -aes-256-cbc -pbkdf2 -kfile master_key -in encrypted_message.bin)
 
 #check if decryption succeeded
-if [[ $? -eq 0 ]]; then
-	echo "Client-Server TLS handshake has been completed successfully"
-else
+if [[ "$DECRYPTED_MESSAGE" != "$SAMPLE_MESSAGE" ]]; then
 	echo "Server symmetric encryption using the exchanged master-key has failed."
 	exit 6
+else
+  echo "Client-Server TLS handshake has been completed successfully"
+	exit 0
 fi
 
 # Print the decrypted message
