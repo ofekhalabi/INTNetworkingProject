@@ -38,7 +38,7 @@ echo "Failed to download CA certificate."
 exit 1
 fi
 #check if the certificate is valid
-openssl verify -CAfile cert-ca-aws.pem "${PATH_TLS}/cert.pem" > /dev/null 2>&1
+openssl verify -CAfile cert-ca-aws.pem cert.pem > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
 	echo 'Cert.pem: OK'
 else
